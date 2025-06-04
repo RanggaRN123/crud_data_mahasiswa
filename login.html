@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="css/login.css">
+  <script type="module" src="app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+
+    <input type="text" id="login-username" placeholder="Username">
+    <div class="error-msg" id="login-username-error"></div>
+
+    <input type="password" id="login-password" placeholder="Password">
+    <div class="error-msg" id="login-password-error"></div>
+
+    <div class="error-msg" id="login-general-error"></div>
+
+    <button id="login-btn">Login</button>
+    <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+  </div>
+
+  <script type="module">
+    import { loginUser } from './app.js';
+
+    const usernameEl = document.getElementById('login-username');
+    const passwordEl = document.getElementById('login-password');
+
+    const usernameErr = document.getElementById('login-username-error');
+    const passwordErr = document.getElementById('login-password-error');
+    const generalErr  = document.getElementById('login-general-error');
+
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const username = usernameEl.value.trim();
+      const password = passwordEl.value.trim();
+      let valid = true;
+
+      // Reset error
+      [usernameErr, passwordErr, generalErr].forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+      });
+      [usernameEl, passwordEl].forEach(el => el.classList.remove('error'));
+
+      // Validasi input
+      if (!username) {
+        usernameErr.textContent = 'Username wajib diisi.';
+        usernameErr.style.display = 'block';
+        usernameEl.classList.add('error');
+        valid = false;
+      }
+
+      if (!password) {
+        passwordErr.textContent = 'Password wajib diisi.';
+        passwordErr.style.display = 'block';
+        passwordEl.classList.add('error');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      // Proses login
+      const result = await loginUser(username, password);
+
+      if (result === 'invalid') {
+        generalErr.textContent = 'Username atau password salah.';
+        generalErr.style.display = 'block';
+      } else if (result === 'error') {
+        generalErr.textContent = 'Terjadi kesalahan saat login.';
+        generalErr.style.display = 'block';
+      } else if (result === 'success') {
+        alert('Login berhasil!');
+        localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('username', username); 
+        // Arahkan ke halaman dashboard atau home
+        window.location.href = 'dashboard.html'; // bisa kamu buat nanti
+      }
+    });
+  </script>
+</body>
+</html>
