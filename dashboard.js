@@ -23,7 +23,7 @@ function getUser() {
 
   // Tampilkan username di header dan sapaan
   document.getElementById('username').textContent = username;
-  document.getElementById('sapaan').textContent = `Hallo0, ${username}!`;
+  document.getElementById('sapaan').textContent = `Hallo, ${username}!`;
 
   loadMahasiswa();
 }
